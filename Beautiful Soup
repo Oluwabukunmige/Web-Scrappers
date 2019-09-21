@@ -70,6 +70,15 @@ for page in pages:
             #scrape the prices
             price = container.find('span', role = 'text', class_ = 'visuallyhidden').text
             prices.append(price)
+
+
+
+
+import pandas as pd
+laptop_ratings = pd.DataFrame({'Specification': laptop_names,
+'Price': prices})
+laptop_ratings.to_csv('laptop.csv')
+
         
            
 
