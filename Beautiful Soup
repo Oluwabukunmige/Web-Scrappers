@@ -1,1 +1,76 @@
+#import all the required modules
+import re
+import requests, bs4
+from requests import get
+from bs4 import BeautifulSoup
+from IPython.core.display import clear_output
+from warnings import warn
+from time import sleep
+from random import randint
+from time import time
+
+#This is specified to ensure we access the english version of the site
+headers = {"Accept-Language": "en-US, en;q=0.5"}
+
+#the pages we will be scraping from
+pages = [str(i) for i in range(1,26)]
+
+#declare lists to stored scraped data
+laptop_names = []
+prices = []
+
+#prepare the monitoring loop
+start_time = time()
+requests = 0
+
+
+
+#for every page in the interval 1-25
+for page in pages:
+    
+    #make a get request
+    response = get('https://www.walmart.com/browse/electronics/laptop-computers/apple/3944_3951_132960/?page='+ page + 
+                   '&cat_id=3944_3951_132960&facet=brand%3AApple#searchProductResult', headers = headers)
+    
+    #pause the loop for 8-20 seconds
+    sleep(randint(8,20))
+    
+    #monitor the requests
+    requests += 1
+    elapsed_time = time() - start_time
+    print('Request:{}; Frequency: {} requests/s'.format(requests, requests/elapsed_time))
+    clear_output(wait = True)
+    
+    #show a warning if a non 200 status code is returned
+    if response.status_code != 200:
+        warn('Request: {}; Status code: {}'.format(requests, response.status_code))
+    
+    #break the loop if the requests exceed 26
+    if requests > 26:
+        warn('Number of requests was greater than expected.')
+        break
+        
+    #parse the response content in the beautiful soup object
+    laptop_soup = BeautifulSoup(response.content, 'html.parser')
+    
+    regex = re.compile('^Grid-col.*item$')
+    laptop_container = laptop_soup.find_all('li', class_ = regex)
+    
+    
+    for container in laptop_container:
+        
+        
+        
+            #scrape the names
+            pro_re = re.compile('^product.*clamp-2$')
+            name = container.find('a', lang = 'en', class_ = pro_re).text
+            laptop_names.append(name)
+            
+        
+            #scrape the prices
+            price = container.find('span', role = 'text', class_ = 'visuallyhidden').text
+            prices.append(price)
+        
+           
+
 
