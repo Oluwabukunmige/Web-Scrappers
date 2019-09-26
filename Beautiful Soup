@@ -1,4 +1,4 @@
-#import all the required modules
+##import all the required modules
 import re
 import requests, bs4
 from requests import get
@@ -18,6 +18,7 @@ pages = [str(i) for i in range(1,26)]
 #declare lists to stored scraped data
 laptop_names = []
 prices = []
+vendors = []
 
 #prepare the monitoring loop
 start_time = time()
@@ -54,29 +55,32 @@ for page in pages:
     laptop_soup = BeautifulSoup(response.content, 'html.parser')
     
     regex = re.compile('^Grid-col.*item$')
-    laptop_container = laptop_soup.find_all('li', class_ = regex)
-    
+    laptop_container = laptop_soup.find_all('li')
     
     for container in laptop_container:
+        if container.find('div', class_ = 'search-result-gridview-item clearfix arrange-fill') is not None:
+        
+            price = container.select('span."price-main-block" span.visuallyhidden')[0].text
+            prices.append(price)
         
         
         
-            #scrape the names
             pro_re = re.compile('^product.*clamp-2$')
             name = container.find('a', lang = 'en', class_ = pro_re).text
             laptop_names.append(name)
-            
         
-            #scrape the prices
-            price = container.find('span', role = 'text', class_ = 'visuallyhidden').text
-            prices.append(price)
+            vendor = container.find('span', class_ = 'marketplace-sold-by-company-name').text
+            vendors.append(vendor)
+    
+           
 
 
 
 
 import pandas as pd
 laptop_ratings = pd.DataFrame({'Specification': laptop_names,
-'Price': prices})
+'Price': prices,
+'Vendor': vendors})
 laptop_ratings.to_csv('laptop.csv')
 
         
