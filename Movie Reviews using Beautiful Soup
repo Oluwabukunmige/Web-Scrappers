@@ -42,7 +42,7 @@ for page in pages:
     clear_output(wait = True)
     
     #show a warning if a non 200 status code is returned
-    if response.status_code != 200:
+    if movies.status_code != 200:
         warn('Request: {}; Status code: {}'.format(requests, response.status_code))
     
     #break the loop if the requests exceed 26
