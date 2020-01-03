@@ -1,5 +1,5 @@
 # Movies Reviews
-This is the code snippet to scrape movie reviews from metacritic.com using beautiful soup.
+This is the code snippet to scrape movie reviews from [metacritic](metacritic.com) using beautiful soup.
 
 ``` Python
 #import all the required modules
