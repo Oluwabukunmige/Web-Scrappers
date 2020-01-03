@@ -1,5 +1,5 @@
-# Web-Scrappers
-This repository contains all the code snippets for my webscrapping projects.
+# Movies Reviews
+This is the code snippet to scrape movie reviews from metacritic.com using beautiful soup.
 
 ``` Python
 #import all the required modules
